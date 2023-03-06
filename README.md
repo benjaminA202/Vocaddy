@@ -4,6 +4,10 @@
 
 As a lifelong tech enthusiast, I embarked on a journey to learn how to code and put my skills to the test. In the course of my learning, I created a Progressive Web Application (PWA) that reflects my passion for creating innovative solutions.
 
+Vocaddy is a fun and challenging vocabulary-building game that professionals around the world can take advantage of to skyrocket their competence and verbal influence.
+
+It allows the user to learn new and smart sounding words in english, spanish and japanese, level up, achieve highscores, and a whole bunch more.
+
 Although I had the option to create a simple TicTacToe website, I decided to invest my time in something more meaningful that had the potential to generate revenue. I took on the challenge of designing the entire user interface and design elements from scratch using Adobe Photoshop.
 
 I utilized my knowledge of HTML, CSS, and JavaScript to make the app responsive on 95% of Chrome Browser Screen Sizes. Leveraging my experience with JavaScript frameworks, I utilized ExpressJS for the backend.
