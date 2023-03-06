@@ -8,9 +8,9 @@ Vocaddy is a fun and challenging vocabulary-building game that professionals aro
 
 It allows the user to learn new and smart sounding words in english, spanish and japanese, level up, achieve highscores, and more.
 
-Although I had the option to create a simple TicTacToe website, I decided to invest my time in something more meaningful to me that had the potential to generate revenue from the get-go. I took on the challenge of designing the entire user interface and design elements from scratch using Adobe Photoshop.
+Although I had the option to create a simple TicTacToe website, I decided to invest my time in something more meaningful to me that had the potential to generate revenue from the get-go. I took on the challenge of designing the entire user interface and design elements from scratch in Adobe Photoshop.
 
-I utilized my knowledge of HTML, CSS, and JavaScript to make the app responsive on 95% of Chrome Browser Screen Sizes. Leveraging my experience with JavaScript frameworks, I utilized ExpressJS for the backend.
+I utilized my knowledge of HTML, CSS, and JavaScript to make the app responsive on 95% of Chrome Browser Screen Sizes. I utilized ExpressJS for the backend.
 
 As the PWA required user authentication and authorization, I integrated the Auth0 stack to provide robust and secure authentication features. I also implemented Paddle for payment processing. Designed ads, and researched relevant keywords to optimize the PWA's commercial viability.
 
