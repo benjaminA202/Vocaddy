@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title>Vocaddy</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="description" content="">
+        <meta name="mobile-web-app-capable" content="yes">   <!--revisit this later-->
+        <meta name="viewport" content="width=device-width, initial-scale=1 viewport-fit=cover"/>
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="/style.css" type="text/css">
+        <link rel="manifest" href="/manifest.json">
+        <link rel="icon" type="image/x-icon" href="/Icons/icon72x72.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/Icons/icon72x72.png">
+        <link rel="apple-touch-icon" sizes="96x96" href="/Icons/icon96x96.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/Icons/icon120x120.png">
+        <link rel="apple-touch-icon" sizes="128x128" href="/Icons/icon128x128.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/Icons/icon144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/Icons/icon152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/Icons/icon180x180.png">
+        <link rel="apple-touch-icon" sizes="192x192" href="/Icons/icon192x192.png">
+        <link rel="apple-touch-icon" sizes="384x384" href="/Icons/icon384x384.png">
+        <link rel="apple-touch-icon" sizes="512x512" href="/Icons/icon512x512.png">
+    </head>
+    <body>
+        <div id="visit">
+            <h3>Visit us on a mobile device for the best experience.</h3>
+        </div>
+        <!-- changing background Image at challenge -->
+        <div id="mobile-container">
+            <div id="top-left-challenge">
+                <img src="/Icons/leave.svg" alt="Menu Icon" onclick="setTimeout(setLoading(true), 2000); gameOver(); window.location.reload()" class="hide">
+                <div id="timer-container">
+                    <h2 id="timer" class="hide">30</h2>
+                </div>
+            </div>
+            <nav>
+                <div id="nav-container">
+                    <div class="menu-btn">
+                        <div class="line line--1"></div>
+                        <div class="line line--2"></div>
+                        <div class="line line--3"></div>
+                    </div>
+    
+                    <div class="nav-links">
+                        <a href="" class="link">Home</a>
+                        <a href="javascript: if (isLoggedIn === true) { window.location.href = '/cards' } else { window.location.href = '/login' };"  class="link">Vocabulary</a>
+                        <a href="javascript:openProfile();"  class="link">Dashboard</a>
+                        <a href="javascript: if (isLoggedIn === true) { window.location.href = '/challenges' } else { window.location.href = '/login' };"  class="link">Challenges</a>
+                        <a href="/help" class="link">Help</a>
+                        <a href="/about" class="link">About</a>
+                        <a href="javascript:startSalesPageTimer();POPUPS.classList.remove('hide');SALES_PAGE.classList.remove('hide');" style="color: black;opacity: .35;text-decoration: underline;" id="menu-premium" class="link">Premium</a>
+                        <div id="legal-container">
+                            <a href="/privacypolicy" style="font-size: 1.4vh;" class="link">Privacy policy</a>
+                            <a href="/impressum" style="font-size: 1.4vh; margin-left: 5%;" class="link">Impressum</a>
+                        </div>
+                        <h5 id="bottom-impressum">Copyright © 2023</h5>
+                    </div>
+                </div>
+            </nav>
+            <div id="challenge-space" class="hide">
+                <div id="challenge-center">
+                    <div id="challenge-container">
+                        <div id="question-container">
+                            <h3 id="definition"></h3>
+                        </div>
+                        <div id="challenge-stats">
+                            <div id="lives-left">
+                                <h4>8 lives left.</h4>
+                            </div>
+                            <div id="score">
+                                <h4>Score: 80 points.</h4>
+                                <img src="/Images/fire.gif" alt="Gif of a fire" id="fire-gif" class="hide">
+                            </div>
+                        </div>
+                        <div id="answer-container">
+                            <form action="#" class="answer" autocomplete="off" onsubmit="userAnswerCheck();return false"> <!-- "return false" must stay so form doesn't cause the page to refresh-->
+                                <label for="answer-input">Guess the word!</label>
+                                <input type="text" name="answer" placeholder=" answer" class="answer" id="answer-input" required>
+                                <div id="answer-buttons">
+                                    <button type="submit" value="Check Answer" id="answer-submit" class="button">Check Answer</button>
+                                    <button onclick="clearInterval(interval); wrongAnswer(); SKIP_HEADER.innerText = '-1 life.'; hasSkipped = 1" type="button" value="Check Answer" id="skip" class="button">or skip</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="selection" class="hide">
+                            <button onclick="selectionAnswerCheck('selection1')" id="selection1" class="button">Option 1</button>
+                            <button onclick="selectionAnswerCheck('selection2')" id="selection2" class="button">Option 2</button>
+                            <button onclick="selectionAnswerCheck('selection3')" id="selection3" class="button">Option 3</button>
+                        </div>
+                        <h5 id="crossword-text" class="hide">Click/Drag the letters of the correct word below</h5>
+                        <div id='crossword-container' class="hide"></div>
+                    </div>
+                </div>
+                <div id="challenge-bottom">
+                    <h3 id="bonus-chest-header" class="invisible">Click the chest for bonus stars before the time runs out!</h3>
+                    <div id="bonus-chest-health" class="invisible BGrepeat">
+                        <h4 id="left-hp"></h4>
+                        <h4 id="max-hp"></h4>
+                    </div>
+                    <h4 id="minus-hp1" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp2" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp3" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp4" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp5" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp6" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp7" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp8" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp9" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp10" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp11" class="invisible minus-hp move-up">-10</h4>
+                    <h4 id="minus-hp12" class="invisible minus-hp move-up">-10</h4>
+                    <div id="bucket"></div>
+                    <img id="bonus-chest" class="invisible" src="/Images/chest.gif" alt="">
+                    <img id="bonus-chest-confetti" class="invisible" src="/Images/confetti.gif" alt="">
+                    <img id="hint-button" src="/Icons/solution.svg" alt="Hint Button" class="hide">
+                </div>
+            </div>
+            <div class="center-container" id="center-container">
+                <div id="slider">
+                    <div class="slider-item" id="slider-item1"> 
+                        <div class="slide slider-top">
+                            <img src="/Icons/stand-out.svg" alt="Person with arms up Symbol">
+                        </div>
+                        <div class="center-element slide slider-bottom">
+                            <h3>Be confident.</h3>
+                        </div>
+                    </div>
+                    <div class="slider-item" id="slider-item2"> 
+                        <div class="slide slider-top">
+                            <img src="/Icons/knowledge.svg" alt="Lightbulb and key Symbol">
+                        </div>
+                        <div class="center-element slide slider-bottom">
+                            <h3>Sound smarter.</h3>
+                        </div>
+                    </div>
+                    <div class="slider-item" id="slider-item3"> 
+                        <div class="slide slider-top">
+                            <img src="/Icons/trust.svg" alt="Handshake Symbol">
+                        </div>
+                        <div class="center-element slide slider-bottom">
+                            <h3>Make a great first impression.</h3>
+                        </div>
+                    </div>
+                    <div class="slider-item" id="slider-item4"> 
+                        <div class="slide slider-top">
+                            <img src="/Icons/funds.svg" alt="Money Symbol">
+                        </div>
+                        <div class="center-element slide slider-bottom">
+                            <h3>Capture career opportunities.</h3>
+                        </div>
+                    </div>
+                    <div class="slider-item" id="slider-item5"> 
+                        <div class="slide slider-top">
+                            <img src="/Icons/growth-chart.svg" alt="People and arrow up Symbol">
+                        </div>
+                        <div class="center-element slide slider-bottom">
+                            <h3>Boost your image.</h3>
+                        </div>
+                    </div>
+                    <div class="slider-item" id="slider-item6"> 
+                        <div class="slide slider-top">
+                            <img src="/Icons/idea-exchange.svg" alt="People talking Symbol">
+                        </div>
+                        <div class="center-element slide slider-bottom">
+                            <h3>Train your memory.</h3>
+                        </div>
+                    </div>
+                    <div class="slider-item" id="slider-item7"> 
+                        <div class="slide slider-top">
+                            <img src="/Icons/emoji.svg" alt="Sad and then happy Symbol">
+                        </div>
+                        <div class="center-element slide slider-bottom">
+                            <h3>Express yourself clearly.</h3>
+                        </div>
+                    </div>
+                </div>
+                <div id="start-container">
+                    <img id="click" src="/Images/click.gif" alt="click Gif" class="hide">
+                    <div id="start-container-top" class="center-element">
+                        <button id="start" class="button">Play Now</button>
+                    </div>
+                    <div id="start-container-bottom">
+                        <a id="tutorial-start-button" onclick="tutorialSequence()">or <span style="text-decoration: underline;">view tutorial</span></a>
+                    </div>
+                </div>
+            </div>
+            <div id="popups" class="hide">      <!--if a popup element should be hidden or revealed the hide class of "popup" must be idden/revealed aswell.-->
+                <div id="correct-answer" class="hide">
+                    <div id="correct-space">
+                        <div id="upper-correct" class="margin_bottom7percent">
+                            <h3>Correct!</h3>
+                        </div>
+                        <div>
+                            <h4 id="streak-text" class="hide"></h4>
+                        </div>
+                        <div id="lower-correct">
+                            <button onclick="correctAnswer(); newChallenge()" class="button">Continue</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="wrong-answer" class="hide">
+                    <div id="wrong-space">
+                        <div id="upper-wrong">
+                            <h3>Wrong.</h3>
+                        </div>
+                        <div id="middle-wrong">
+                            <h4></h4>
+                            <img id="speaker" src="/Icons/speaker.svg" alt="speaker icon">
+                        </div>
+                        <div id="lower-wrong">
+                            <button onclick="wrongAnswer(); newChallenge()" class="button">Continue</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="time-expired" class="hide">
+                    <div id="expired-space">
+                        <div id="upper-expired">
+                            <h3>Time expired.</h3>
+                        </div>
+                        <div id="middle-expired">
+                            <h4></h4>
+                            <img id="speaker2" src="/Icons/speaker.svg" alt="speaker icon">
+                        </div>
+                        <div id="lower-expired">
+                            <button onclick="timeExpired()" class="button">Continue</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="last-answer" class="hide">
+                    <div id="last-answer-space">
+                        <div id="upper-last-answer">
+                            <h3>Game over.</h3>
+                        </div>
+                        <div id="middle-last-answer">
+                            <h4></h4>
+                        </div>
+                        <div id="lower-last-answer">
+                            <button onclick="lastWrongAnswer()" class="button">Continue</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="levelup" class="hide">
+                    <div id="levelup-space">
+                        <img id="levelup-gif" src="/Images/badge.gif" alt="">
+                        <div id="upper-levelup">
+                            <h3>Level Up!</h3>
+                        </div>
+                        <div id="middle-levelup">
+                            <h4></h4>
+                        </div>
+                        <div id="lower-levelup">
+                            <button onclick="LEVELUP.classList.add('hide'); GAME_OVER.classList.remove('hide'); gameOver();" class="button">Continue</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="language-pack-open" class="hide">
+                    <div id="language-pack-open-space">
+                        <img class="hide" id="language-pack-open-gif" src="/Images/badge.gif" alt="">
+                        <div id="upper-language-pack-open">
+                            <h3>Unlocked!</h3>
+                        </div>
+                        <div id="middle-language-pack-open">
+                            <h4>You can click it again to deactivate it.</h4>
+                        </div>
+                        <div id="lower-language-pack-open">
+                            <button onclick="languagePackOpened()" class="button">Continue</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="not-enough-stars" class="hide">
+                    <div id="not-enough-stars-space">
+                        <img class="hide" id="not-enough-stars-gif" src="/Images/badge.gif" alt="">
+                        <div id="upper-not-enough-stars">
+                            <h4>Not enough stars.</h4>
+                        </div>
+                        <div id="middle-not-enough-stars">
+                            <h4></h4>
+                        </div>
+                        <div id="lower-not-enough-stars">
+                            <button onclick="NOT_ENOUGH_STARS.classList.add('hide')" class="button">Continue</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="connection-lost" class="hide">
+                    <div id="connection-lost-space">
+                        <div id="upper-connection-lost">
+                            <img id="connection-lost-gif" src="/Icons/connection-lost.svg" alt="">
+                            <h4>Connection Lost.</h4>
+                        </div>
+                        <div id="middle-connection-lost">
+                            <h4>Please re-connect to the internet.</h4>
+                        </div>
+                    </div>
+                </div>
+                <div id="add-to-homescreen" class="hide">
+                    <div id="add-to-homescreen-space">
+                        <div id="upper-add-to-homescreen">
+                            <img id="add-to-homescreen-gif" src="/Icons/download.svg" alt="">
+                            <h4>Get the webapp!</h4>
+                        </div>
+                        <div id="middle-add-to-homescreen">
+                            <div id="middle-add-to-homescreen-text" class="content">
+                                Tap <img src="/Icons/shareiOS.svg" class="text-icon" alt="instruction icon" /> and then "Add to Homescreen"
+                            </div>
+                            <h4 style="color: grey; font-weight: 100; font-size: 1.4vh; margin-top: 50vh; margin-bottom: -40vh"><span style="text-decoration: underline; cursor: pointer;" onclick="window.location.href=`/impressum`">Impressum</span>  <span style="text-decoration: underline; cursor: pointer;" onclick="window.location.href=`/privacypolicy`">Privacy Policy</span></h4>
+                        </div>
+                    </div>
+                </div>
+                <div id="allow-notifications" class="hide">
+                    <div id="allow-notifications-space">
+                        <div id="upper-allow-notifications">
+                            <img id="allow-notifications-gif" src="/Icons/bell.svg" alt="">
+                            <h4>This App requires notification permissions</h4>
+                        </div>
+                        <div id="middle-allow-notifications">
+                            <div id="middle-allow-notifications-text" class="content">
+                                Open your Phone Settings → Apps → Vocaddy → Allow Notifications.
+                            </div>
+                        </div>
+                        <div id="lower-allow-notifications" class="lower-game-over-two-button">
+                            <div id="allow-notifications-button">
+                                <button onclick="POPUPS.classList.add('hide'); ADD_TO_HOMESCREEN.classList.add('hide')" class="button">Done.</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="today-played-games" class="hide">
+                    <div id="today-played-games-space">
+                        <img class="hide" id="today-played-games-gif" src="/Images/badge.gif" alt="">
+                        <div id="upper-today-played-games">
+                            <h4>Limit reached.</h4>
+                        </div>
+                        <div id="middle-today-played-games">
+                            <h4>You have reached the daily play limit.</h4>
+                        </div>
+                        <div id="lower-today-played-games">
+                            <button onclick="POPUPS.classList.remove('hide'); SALES_PAGE.classList.remove('hide'); startSalesPageTimer()" class="button">Buy Premium</button>
+                            <button onclick="window.location.reload()" class="button">Back to Home</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="social-revive" class="hide">
+                    <div id="social-revive-space">
+                        <img class="hide" id="social-revive-gif" src="/Images/badge.gif" alt="">
+                        <div id="upper-social-revive">
+                            <h4>Game Over.</h4>
+                        </div>
+                        <div id="middle-social-revive">
+                            <h4><span style="color: white">Revive</span> by sharing us on social media!</h4>
+                        </div>
+                        <div id="lower-social-revive">                     
+                            <!-- Sharingbutton Twitter -->
+                            <a onclick="socialRevived()" class="resp-sharing-button__link" href="https://twitter.com/intent/tweet/?text=Develop%20incredible%20speaking%20skills%2C%20with%20a%20fun%20and%20simple%20to%20use%20Vocabulary%20Building%20Game.%20The%20Vocaddy%20app%20is%20guaranteed%20to%20help%20you%20adopt%20a%20wide%20range%20of%20incredibly%20smart%2C%20classy%2C%20and%20POWERFUL%20sounding%20words.%20Join%20me%20now!&amp;url=https%3A%2F%2Fvocaddy.app%2F" target="_blank" rel="noopener" aria-label="Share on Twitter">
+                                <div class="resp-sharing-button resp-sharing-button--twitter resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"/></svg>
+                                </div>Share on Twitter</div>
+                            </a>
+                            
+                            <!-- Sharingbutton Reddit -->
+                            <a onclick="socialRevived()" class="resp-sharing-button__link" href="https://reddit.com/submit/?url=https%3A%2F%2Fvocaddy.app%2F&amp;resubmit=true&amp;title=Develop%20incredible%20speaking%20skills%2C%20with%20a%20fun%20and%20simple%20to%20use%20Vocabulary%20Building%20Game.%20The%20Vocaddy%20app%20is%20guaranteed%20to%20help%20you%20adopt%20a%20wide%20range%20of%20incredibly%20smart%2C%20classy%2C%20and%20POWERFUL%20sounding%20words.%20Join%20me%20now!" target="_blank" rel="noopener" aria-label="Share on Reddit">
+                                <div class="resp-sharing-button resp-sharing-button--reddit resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 11.5c0-1.65-1.35-3-3-3-.96 0-1.86.48-2.42 1.24-1.64-1-3.75-1.64-6.07-1.72.08-1.1.4-3.05 1.52-3.7.72-.4 1.73-.24 3 .5C17.2 6.3 18.46 7.5 20 7.5c1.65 0 3-1.35 3-3s-1.35-3-3-3c-1.38 0-2.54.94-2.88 2.22-1.43-.72-2.64-.8-3.6-.25-1.64.94-1.95 3.47-2 4.55-2.33.08-4.45.7-6.1 1.72C4.86 8.98 3.96 8.5 3 8.5c-1.65 0-3 1.35-3 3 0 1.32.84 2.44 2.05 2.84-.03.22-.05.44-.05.66 0 3.86 4.5 7 10 7s10-3.14 10-7c0-.22-.02-.44-.05-.66 1.2-.4 2.05-1.54 2.05-2.84zM2.3 13.37C1.5 13.07 1 12.35 1 11.5c0-1.1.9-2 2-2 .64 0 1.22.32 1.6.82-1.1.85-1.92 1.9-2.3 3.05zm3.7.13c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9.8 4.8c-1.08.63-2.42.96-3.8.96-1.4 0-2.74-.34-3.8-.95-.24-.13-.32-.44-.2-.68.15-.24.46-.32.7-.18 1.83 1.06 4.76 1.06 6.6 0 .23-.13.53-.05.67.2.14.23.06.54-.18.67zm.2-2.8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm5.7-2.13c-.38-1.16-1.2-2.2-2.3-3.05.38-.5.97-.82 1.6-.82 1.1 0 2 .9 2 2 0 .84-.53 1.57-1.3 1.87z"/></svg>
+                                </div>Share on Reddit</div>
+                            </a>
+                            
+                            <!-- Sharingbutton WhatsApp -->
+                            <a onclick="socialRevived()" class="resp-sharing-button__link" href="whatsapp://send?text=Develop%20incredible%20speaking%20skills%2C%20with%20a%20fun%20and%20simple%20to%20use%20Vocabulary%20Building%20Game.%20The%20Vocaddy%20app%20is%20guaranteed%20to%20help%20you%20adopt%20a%20wide%20range%20of%20incredibly%20smart%2C%20classy%2C%20and%20POWERFUL%20sounding%20words.%20Join%20me%20now!%20https%3A%2F%2Fvocaddy.app%2F" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
+                                <div class="resp-sharing-button resp-sharing-button--whatsapp resp-sharing-button--large"><div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.1 3.9C17.9 1.7 15 .5 12 .5 5.8.5.7 5.6.7 11.9c0 2 .5 3.9 1.5 5.6L.6 23.4l6-1.6c1.6.9 3.5 1.3 5.4 1.3 6.3 0 11.4-5.1 11.4-11.4-.1-2.8-1.2-5.7-3.3-7.8zM12 21.4c-1.7 0-3.3-.5-4.8-1.3l-.4-.2-3.5 1 1-3.4L4 17c-1-1.5-1.4-3.2-1.4-5.1 0-5.2 4.2-9.4 9.4-9.4 2.5 0 4.9 1 6.7 2.8 1.8 1.8 2.8 4.2 2.8 6.7-.1 5.2-4.3 9.4-9.5 9.4zm5.1-7.1c-.3-.1-1.7-.9-1.9-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1s-1.2-.5-2.3-1.4c-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6s.3-.3.4-.5c.2-.1.3-.3.4-.5.1-.2 0-.4 0-.5C10 9 9.3 7.6 9 7c-.1-.4-.4-.3-.5-.3h-.6s-.4.1-.7.3c-.3.3-1 1-1 2.4s1 2.8 1.1 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.3-.3-.4-.6-.5z"/></svg>
+                                </div>Share on WhatsApp</div>
+                            </a>
+                            <button onclick="lastWrongAnswer()" class="button">No thanks.</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="star-revive" class="hide">
+                    <div id="star-revive-space">
+                        <img class="hide" id="star-revive-gif" src="/Images/badge.gif" alt="">
+                        <div id="upper-star-revive">
+                            <h4>Game Over.</h4>
+                        </div>
+                        <div id="middle-star-revive">
+                            <h4><span style="color: white">Revive</span> by spending 500 stars!</h4>
+                        </div>
+                        <div id="lower-star-revive">
+                            <button onclick="lastWrongAnswer()" class="button">No thanks</button>
+                            <button onclick="giveRevive()" class="button">Revive</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="game-over" class="hide">
+                    <div id="game-over-space">
+                        <div id="upper-game-over">
+                            <h4>New Highscore:</h4>
+                            <h3>940 points.</h3>
+                        </div>
+                        <div id="lower-game-over">
+                            <button onclick="clearTimeout(timeout) || playAgainButton()" class="button">Play Again</button>
+                            <button onclick="window.location.reload()" class="button">Back to Home</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="sales-form" class="hide">
+                    <div id="sales-form-space">
+                        <h4 id="sales-form-paragraph" class="hide"></h4>
+                        <div id="upper-sales-form">
+                            <h4></h4>
+                        </div>
+                        <div id="middle-sales-form">
+                            <h4></h4>
+                        </div>
+                        <div id="lower-sales-form" class="lower-game-over-two-button">
+                            <div id="sales-form-two-button">
+                                <button onclick="NOT_ENOUGH_STARS.classList.add('hide')" class="button">Yes</button>
+                                <button id="sales-form-two-button-right" onclick="NOT_ENOUGH_STARS.classList.add('hide')" class="button">No</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sales-page" class="hide">
+                    <div id="sales-page-space">
+                        <div id="top-left-sales-page">
+                            <img src="/Icons/leave.svg" alt="Menu Icon" onclick="window.location.reload()" class="">
+                        </div>
+                        <img id="breakout-gif" src="/Images/breakout.gif" alt="">
+                        <div id="sales-page-heading-space">
+                            <img src="/Images/premiumLogo.png" alt="">
+                            <h4>Get the most out of Premium with the 12
+                                month plan. Offer ends in <span id="sales-page-time-text"><span id="sales-page-minutes">2</span>:<span id="sales-page-seconds">59</span> mins.</span></h4>
+                        </div>
+                        <div id="sales-page-middle-space">
+                            <div id="one-month-container">
+                                <img id="one-month-checkmark-icon" class="hide" src="/Icons/checkmarkIcon.svg" alt="checkmark-icon">
+                                <h3 id="one">1</h3>
+                                <h3 id="one-month">Month</h3>
+                                <div id="one-month-bottom-container">
+                                    <div id="one-month-seperator"></div>
+                                    <h4 id="one-monthly-price">$14.99 / mo</h4>
+                                </div>
+                            </div>
+                            <div id="twelve-month-container">
+                                <img id="twelve-month-checkmark-icon" src="/Icons/checkmarkIcon.svg" alt="checkmark-icon">
+                                <h4 id="save-seventy">Save 55%</h4>
+                                <div id="twelve-month-inner-container">
+                                    <h3 id="twelve">12</h3>
+                                    <h3 id="twelve-month">Months</h3>
+                                    <h4 id="crossed-out-price">$̶1̶7̶9̶.̶0̶0̶</h4>
+                                    <h4 id="twelve-month-new-price">$77.88</h4>
+                                    <div id="twelve-month-bottom-container">
+                                        <div id="twelve-month-seperator"></div>
+                                        <h4 id="twelve-monthly-price">$6.49 / mo</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="six-month-container">
+                                <img id="six-month-checkmark-icon" class="hide" src="/Icons/checkmarkIcon.svg" alt="checkmark-icon">
+                                <h3 id="six">6</h3>
+                                <h3 id="six-month">Months</h3>
+                                <h4 id="six-month-new-price">$59.94</h4>
+                                <div id="six-month-bottom-container">
+                                    <div id="six-month-seperator"></div>
+                                    <h4 id="six-monthly-price">$9.99 / mo</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <h3 id="cancel-anytime">Cancel anytime in the App</h3>
+                        <button onclick="openCheckout(807565)">Get 55% OFF now</button>
+                    </div>
+                </div>
+                <div id="tutorial" class="hide">
+                    <div id="tutorial-space">
+                        <div id="upper-tutorial">
+                            <img id="right-arrow" src="/Icons/right-arrow.svg" alt="arrow-right" class="hide">
+                            <div id="upper-inner-tutorial">
+                                <img src="/Images/view1.jpg" alt="image of tutorial">
+                            </div>
+                            <img id="left-arrow" src="/Icons/left-arrow.svg" alt="arrow-left" class="hide">
+                        </div>
+                        <h4 id="tutorial-paragraph">
+                        </h4>
+                        <div id="lower-tutorial" class="lower-game-over-two-button">
+                            <div id="tutorial-button" class="hide">
+                                <button onclick="TUTORIAL.classList.add('hide'); POPUPS.classList.add('hide');" class="button">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="feedback" class="hide">
+                    <div id="feedback-space">
+                        <img src="/Icons/feedback.svg" alt="feedback icon">
+                        <div id="upper-feedback">
+                            <h4>Please give us feedback on your experience.</h4>
+                        </div>
+                        <div id="lower-feedback" class="lower-game-over-two-button">
+                            <div id="feedback-button">
+                                <button onclick="openFeedbackForm()" class="button">Yes</button>
+                                <button id="feedback-button-right" onclick="FEEDBACK.classList.add('hide'); POPUPS.classList.add('hide')" class="button">No</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="definition-popup" class="hide">
+                    <div id="definition-popup-space">
+                        <div id="upper-definition-popup">
+                            <h4>Please give us feedback on your experience.</h4>
+                        </div>
+                        <div id="lower-definition-popup" class="lower-game-over-two-button">
+                            <div id="definition-popup-button">
+                                <button onclick="DEFINITION_POPUP.classList.add('hide')" class="button">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="hint-popup" class="hide">
+                    <div id="hint-space">
+                        <div id="upper-hint">
+                            <h4>Correct Answer:</h4>
+                            <h3>Wrong.</h3>
+                        </div>
+                        <div id="lower-hint">
+                            <button onclick="POPUPS.classList.add('hide');
+                            HINT_POPUP.classList.add('hide');" class="button">Continue</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="bonus-chest-opened" class="hide">
+                    <div id="bonus-chest-opened-space">
+                        <div id="bonus-chest-opened-upper" class="margin_bottom7percent">
+                            <h3>Chest Opened!</h3>
+                        </div>
+                        <div>
+                            <h4 id="bonus-chest-opened-text"></h4>
+                        </div>
+                        <div id="bonus-chest-lower-correct">
+                            <button onclick="correctAnswer(); BONUS_CHEST_OPENED.classList.add('hide');" class="button">Continue</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="iOS-soon" class="hide">
+                    <div id="iOS-soon-space">
+                        <div id="upper-iOS-soon">
+                            <h4>Availiable on iOS soon!</h4>
+                        </div>
+                        <div id="middle-iOS-soon">
+                            <h4>Please visit us on PC using the chrome browser instead or join the waiting-list.</h4>
+                        </div>
+                        <div id="lower-iOS-soon" class="lower-game-over-two-button">
+                            <div id="iOS-soon-button">
+                                <button onclick="openWaitingListForm()" class="button">Get notified via email</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="feature-view" class="hide">
+                    <div id="top-feature-view">
+                        <h3>Premium</h3>
+                        <img id="feature-view-exit" src="/Icons/close.svg" alt="Menu Icon" onclick="POPUPS.classList.add('hide');FEATURE_VIEW.classList.add('hide');">
+                    </div>
+                    <div id="feature-view-space">
+                        <h2>Become a feared opponent in the realm of influence.</h2>
+                        <div id="feature-view-center">
+                            <div id="feature-view-center-one" class="feature-view-center">
+                                <h4 class="first-item feature-view-center-position">FEATURES</h4>
+                                <h4 class="feature-view-center-position">FREE</h4>
+                                <h4 class="feature-view-center-position">PREMIUM</h4>
+                            </div>
+                            <div id="feature-view-center-two" class="feature-view-center">
+                                <h4 style="margin: 0% !important;" class="feature-view-center-position">Learn basic vocabulary</h4>
+                                <img style="margin-left: 11.3%;" class="feature-view-center-position feature-view-checkmark" src="/Icons/check-mark.svg" alt="check mark Icon">
+                                <img style="margin-left: 14%;" class="feature-view-center-position feature-view-checkmark" src="/Icons/check-mark.svg" alt="check mark Icon">
+                            </div>
+                            <div id="feature-view-center-three" class="feature-view-center">
+                                <h4 style="margin: 0% !important;" class="feature-view-center-position">No daily play limit</h4>
+                                <img id="first-second-row-checkmark" style="margin-left: 19.4%; color: grey;" class="feature-view-center-position feature-view-checkmark" src="/Icons/horizontal.svg" alt="check mark Icon">
+                                <img style="margin-left: 14%;" class="feature-view-center-position feature-view-checkmark" src="/Icons/check-mark.svg" alt="check mark Icon">
+                            </div>
+                            <div id="feature-view-center-four" class="feature-view-center">
+                                <h4 style="margin: 0% !important;" class="feature-view-center-position">Get 240+ greatest words</h4>
+                                <img style="margin-left: 11%; color: grey;" class="feature-view-center-position feature-view-checkmark" src="/Icons/horizontal.svg" alt="check mark Icon">
+                                <img style="margin-left: 14%;" class="feature-view-center-position feature-view-checkmark" src="/Icons/check-mark.svg" alt="check mark Icon">
+                            </div>
+                            <div id="feature-view-center-five" class="feature-view-center">
+                                <h4 style="margin: 0% !important;" class="feature-view-center-position">Unlock all language packs</h4>
+                                <img style="margin-left: 6.3%; color: grey;" class="feature-view-center-position feature-view-checkmark" src="/Icons/horizontal.svg" alt="check mark Icon">
+                                <img style="margin-left: 14%;" class="feature-view-center-position feature-view-checkmark" src="/Icons/check-mark.svg" alt="check mark Icon">
+                            </div>
+                            <div id="feature-view-center-five" class="feature-view-center">
+                                <h4 style="margin: 0% !important;" class="feature-view-center-position">Words in foreign languages</h4>
+                                <img style="margin-left: 4.56%; color: grey;" class="feature-view-center-position feature-view-checkmark" src="/Icons/horizontal.svg" alt="check mark Icon">
+                                <img style="margin-left: 14%;" class="feature-view-center-position feature-view-checkmark" src="/Icons/check-mark.svg" alt="check mark Icon">
+                            </div>
+                        </div>
+                        <div id="feature-view-bottom">
+                            <div id="feature-view-bottom-top" class="hide">
+                                <h4 id="old-price">$̶1̶9̶.̶9̶9̶ ̶/̶m̶o̶ </h4>
+                                <h4 id="new-price">$14.99 /mo</h4>
+                            </div>
+                            <div id="feature-view-bottom-bottom">
+                                <button>Upgrade to Premium</button>
+                                <h5 class="hide">Cancel anytime in the App</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="confetti" class="hide">
+                    <img src="/Images/confetti.gif" alt="confetti gif" id="confetti-gif">
+                </div>
+                <div id="stars" class="hide">
+                    <img src="/Images/stars.gif" alt="stars gif" id="stars-gif">
+                </div>
+                <div id="sparkle" class="hide">
+                    <img src="/Images/sparkle.gif" alt="sparkle gif" id="sparkle-gif">
+                </div>
+                <div id="loader" class="hide">
+                    <img src="/Images/loader.gif" alt="loader gif" id="loader-gif">
+                </div>
+            </div>
+            <div id="top-right-profile" class="hide">
+                <div id="top-right-profile-container">
+                    <h4>0</h4>          
+                    <img src="/Icons/star.svg" alt="star svg">  
+                </div>       
+            </div>
+            <div id="profile-space" class="hide">
+                <div id="profile-center">
+                    <div id="profile-pic">
+
+                        <img id="profile-pic-background" src="/Icons/pictureBG.svg" alt="" referrerpolicy="no-referrer">
+                        <img id="profile-pic-image" src="/Images/user.png" alt="" referrerpolicy="no-referrer">
+                    </div>
+                    <div id="profile-stats">
+                        <div id="profile-stats-container">
+                            <h3 id="profile-name"></h3>
+                            <h3 style="color: #dbcab7;filter: drop-shadow(0 0 0.2rem black);" id="profile-level"></h3>
+                            <h3 style="color: #dbcab7;filter: drop-shadow(0 0 0.2rem black);" id="profile-highscore"></h3>
+                        </div>
+                    </div>
+                    <div id="profile-middle">
+                        <div id="profile-middle-left">
+                            <img class="hide" src="/Images/chest.gif" onclick="chestOpened()" alt="chest gif">
+                        </div>
+                        <div id="profile-middle-right">
+                            <div id="competence-container">
+                                <img id="competence-gif" class="hide" src="/Images/fill-up-states/2.gif" alt="image of competence level">
+                                <img id="competence-png" src="/Images/fill-up-states/1.png" alt="image of competence status">
+                                <button id="refill-button" onclick=" reFillButton()" class="hide">Re-fill</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="language-packs">
+                        <div id="languagepacks-headers">
+                            <h3 style="font-size: .8rem !important;" id="languagepacks-heading">Language Packs</h3>
+                            <h3 style="filter: drop-shadow(0 0 0.08rem black); color: #dbcab7;">Unlock new words!</h3>
+                        </div>
+                        <div id="language-packs-container">
+                            <div id="pack-one"></div>
+                            <div id="pack-two"></div>
+                            <div id="pack-three"></div>
+                            <div id="pack-four"></div>
+                            <div id="pack-five"></div>
+                            <div id="pack-six"></div>
+                            <div id="pack-seven"></div>
+                            <div id="pack-eight"></div>
+                        </div>
+                    </div>
+                    <div id="footer-seperator"></div>
+                </div>
+            </div>
+        </div>
+        <link rel="preload" href="/Images/fill-up-states/1.png" as="image">
+        <link rel="preload" href="/Images/fill-up-states/2.png" as="image">
+        <link rel="preload" href="/Images/fill-up-states/3.png" as="image">
+        <link rel="preload" href="/Images/view1.jpg" as="image">
+        <link rel="preload" href="/Images/view2.jpg" as="image">
+        <link rel="preload" href="/Images/view3.jpg" as="image">
+        <link rel="preload" href="/Images/view4.jpg" as="image">
+        <link rel="preload" href="/Images/view5.jpg" as="image">
+
+        <link rel="preload" href="/Images/Pawn_Pack/Pawn.jpg" as="image">
+
+        <link rel="preload" href="/Images/Bishop_Pack/Locked/Bishop.jpg" as="image">
+        <link rel="preload" href="/Images/Bishop_Pack/Active/bishopActivated.jpg" as="image">
+        <link rel="preload" href="/Images/Bishop_Pack/Deactivated/bishopDeactivated.jpg" as="image">
+
+        <link rel="preload" href="/Images/Knight_Pack/Locked/Knight.jpg" as="image">
+        <link rel="preload" href="/Images/Knight_Pack/Deactivated/knightDeactivated.jpg" as="image">
+        <link rel="preload" href="/Images/Knight_Pack/Active/knightActivated.jpg" as="image">
+
+        <link rel="preload" href="/Images/Rook_Pack/Deactivated/rookDeactivated.jpg" as="image">
+        <link rel="preload" href="/Images/Rook_Pack/Active/rookActivated.jpg" as="image">
+
+        <link rel="preload" href="/Images/Queen_Pack/Deactivated/queenDeactivated.jpg" as="image">
+        <link rel="preload" href="/Images/Queen_Pack/Active/queenActivated.jpg" as="image">
+
+        <link rel="preload" href="/Images/King_Pack/Deactivated/kingDeactivated.jpg" as="image">
+        <link rel="preload" href="/Images/King_Pack/Active/kingActivated.jpg" as="image">
+
+        <link rel="preload" href="/Images/Japanese_Pack/Deactivated/jpDeactivated.jpg" as="image">
+        <link rel="preload" href="/Images/Japanese_Pack/Active/jpActivated.jpg" as="image">
+
+        <link rel="preload" href="/Images/Spanish_Pack/Deactivated/esDeactivated.jpg" as="image">
+        <link rel="preload" href="/Images/Spanish_Pack/Active/esActivated.jpg" as="image">
+
+        <script src="/script.js"></script>
+        <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+        <script type="text/javascript">
+        Paddle.Setup({ vendor: 157823 });
+        </script>
+    </body>
+</html>

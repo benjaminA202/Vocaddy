@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Not specified",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "body-parser": "^1.20.1",
+    "connect-timeout": "^1.9.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-openid-connect": "^2.7.2",
+    "express-rate-limit": "^6.6.0",
+    "express-validator": "^6.14.2",
+    "license-checker": "^25.0.1",
+    "mysql": "^2.18.1",
+    "node-cron": "^3.0.2",
+    "node-fetch": "^2.6.7",
+    "openid-client": "^5.1.8",
+    "php-serialize": "^4.0.2",
+    "react-icons": "^4.7.1",
+    "request": "^2.88.2",
+    "request-ip": "^3.3.0",
+    "web-push": "^3.5.0"
+  }
+}

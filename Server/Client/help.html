@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help</title>
+</head>
+<body style="background-color: #dbcab7; margin: 0; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; font-family: 'Roboto Slab', serif; -webkit-tap-highlight-color: transparent; font-size: 1.8vh;">
+    <div id="warning" style="
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    min-width: 80%;
+    max-width: 80%;
+    background-image: url(/Images/stressed.jpg);
+    background-size: 100vh;
+    background-position: 57vw 63vh;
+    background-color: #9c2127;
+    border-radius: 2pc;
+    /* font-size: 0.555rem; */
+    color: white;
+    font-weight: 300;
+">
+        <h1 style="font-weight: 300; font-size: 3.5vh; color: red; margin-top: 5%; margin-bottom: -1.5%;">Warning</h1>
+        <h1 style="font-weight: 300; margin: 5%; font-size: 2.5vh; text-align: center;">If you cancel, you will be permanently <span style="color: red;">blocked</span> from subscribing again. We're continually expanding our product, by adding better words, more languages, and fixing bugs. If you cancel now, you will never get the opportunity again and you could regret it.</h1>
+        <div style="height: 20%; margin-top: 5%; margin-bottom: 9%;">
+            <button onclick="window.location.href = '/'" style="
+            border-color: white;
+            background-color: #dbd2c6;
+            box-shadow: 1px 1px 9px rgb(182 182 182);
+            cursor: pointer;
+            height: 130%;
+            border-radius: 12px;
+            font-size: 2.4vh !important;
+            background-color: #dbcab7;
+            color: black;
+            font-family: 'Roboto Slab', serif;
+            cursor: pointer;">Back to Home</button>
+            <button onclick="openCancelUrl()" style="border-color: white; background-color: red; box-shadow: 1px 1px 9px rgb(0 0 0); cursor: pointer;">Cancel Anyway</button>
+        </div>
+    </div>
+    <h1>Help</h1>
+    <a style="margin-bottom: 5vh; margin-top: 5vh; font-size: 3vh; color: black;" target=”_blank” href="https://paddle.net/">Billing Support</a>
+    <a style="margin-bottom: 5vh; font-size: 3vh; color: black;" target=”_blank” href="">Give feedback</a>
+    <a style="margin-bottom: 5vh; font-size: 3vh; color: black;" href="javascript: openWarning()" id="cancel-subscription">Cancel subscription</a>
+    <h2 style="text-align: center; width: 30vh; line-height:1.4;">Report a bug to: support@vocaddy.com</h2>
+    <button style="transition: .5s; height: 8%; width: 34vh; border-radius: 12px; font-size: 3.8vh; color: black; padding: 0; background-color: black; color: #dbcab7; cursor: pointer; box-shadow: 1px 1px 9px black; font-family: 'Roboto Slab', serif; -webkit-tap-highlight-color: transparent;" onclick="location.href = '/';">Back to Home</button>
+    <h4 style="color: grey; font-weight: 100; font-size: 1.4vh;">Copyright © 2023 | <span style="text-decoration: underline; cursor: pointer;" onclick="window.location.href='/impressum'">Impressum</span></h4>
+    <script>
+
+        let premiumPass = false;
+        let serverDate;
+        let subscription;
+        let isLoggedIn = false;
+
+
+        //check premium or not to display cancellation link
+        var requestOptions = {
+        method: 'GET',
+            headers: { "Content-Type": "application/json" },
+        };
+        fetch('/isLoggedin', requestOptions)
+            .then(response => response.json())
+            .then(data => isLoggedIn = data)
+            .then(() => {
+                if (isLoggedIn === true) {
+                    var requestOptions = {
+                        method: 'GET',
+                        headers: { "Content-Type": "application/json" },
+                    };
+                    fetch('/userMetadata', requestOptions)
+                        .then(response => response.json())
+                        .then(data => {
+                                if (data.subscription === undefined) {
+                                    subscription = undefined;
+                                } else subscription = data.subscription;
+                        })
+                        .then(() => {
+                            // check if subscription exists 
+                            if (subscription !== undefined) {
+
+                                // check if subscription is cancelled
+                                if (subscription.status !== 'cancelled' && subscription.status !== 'refunded') {
+                                    premiumPass = true;
+                                }
+
+                            }
+                        })
+                        .then(()=> {
+                            if (premiumPass === false) {
+                                document.getElementById('cancel-subscription').style.display = 'none';
+                            }
+                        })
+                        .catch(error => console.log(error));
+                } else {
+                    document.getElementById('cancel-subscription').style.display = 'none';
+                }
+            })
+
+        function openWarning () {
+            document.getElementById("warning").style.display = "flex"
+        }
+
+
+
+        async function openCancelUrl() {
+            // check if user is logged in
+            var requestOptions = {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" },
+            };
+            await fetch('/isLoggedin', requestOptions)
+            .then(response => response.json())
+            .then(data => isLoggedIn = data)
+            .then(() => {
+                if (isLoggedIn === true) {
+
+                    // update blocked status
+                    var newData = {
+                        "blockedFromSubscribing": true
+                    };
+                    
+                    var payload = {
+                        method: 'PATCH',
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(newData)
+                    };
+                        
+                    fetch("/user", payload)
+                        .then(() => {
+                            var requestOptions2 = {
+                                method: 'GET',
+                                headers: { "Content-Type": "application/json" },
+                            };
+                            fetch('/userMetadata', requestOptions2)
+                                .then(response => response.json())
+                                .then(data => {
+                                    window.location.href = data.subscription.cancel_url;
+                            })
+                        })
+                        .catch(error => console.log('error', error));
+                } else {
+                    location.href = '/login';
+                }
+            })
+
+        }
+    </script>
+    <style>
+        @font-face { 
+            font-family: Roboto Slab; 
+            src: url('/fonts/RobotoSlab-VariableFont_wght.ttf');
+        } 
+        #warning {
+            box-shadow: 1px 25px 43px -22px rgba(0,0,0,1);
+            -webkit-box-shadow: 1px 25px 43px -22px rgba(0,0,0,1);
+            -moz-box-shadow: 1px 25px 43px -22px rgba(0,0,0,1);
+        }
+    </style>
+</body>
+</html>
