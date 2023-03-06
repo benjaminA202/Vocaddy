@@ -6,7 +6,7 @@ As a lifelong tech enthusiast, I embarked on a journey to learn how to code and 
 
 Vocaddy is a fun and challenging vocabulary-building game that professionals around the world can take advantage of to skyrocket their competence and verbal influence.
 
-It allows the user to learn new and smart sounding words in english, spanish and japanese, level up, achieve highscores, and more.
+It allows the user to learn new and smart sounding words in english, spanish and japanese, level up, achieve highscores, streaks and more.
 
 Although I had the option to create a simple TicTacToe website, I decided to invest my time in something more meaningful to me that had the potential to generate revenue from the get-go. I took on the challenge of designing the entire user interface and design elements from scratch in Adobe Photoshop.
 
