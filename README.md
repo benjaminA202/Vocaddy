@@ -2,9 +2,9 @@
 
 ![alt text](https://github.com/benjaminA202/Vocaddy/blob/main/Server/Client/Images/demo-image.png?raw=true)
 
-As an enthusiastic and hardworking developer, I embarked on a journey to learn how to code and put my skills to the test. In the course of my learning, I created a Progressive Web Application (PWA) that reflects my passion for creating innovative solutions.
+As a lifelong tech enthusiast, I embarked on a journey to learn how to code and put my skills to the test. In the course of my learning, I created a Progressive Web Application (PWA) that reflects my passion for creating innovative solutions.
 
-Although I had the option to create a simple TicTacToe website, I decided to invest my time in something more meaningful that had the potential to generate revenue. I took on the challenge of designing the entire user interface and design elements from scratch.
+Although I had the option to create a simple TicTacToe website, I decided to invest my time in something more meaningful that had the potential to generate revenue. I took on the challenge of designing the entire user interface and design elements from scratch using Adobe Photoshop.
 
 I utilized my knowledge of HTML, CSS, and JavaScript to make the app responsive on 95% of Chrome Browser Screen Sizes. Leveraging my experience with JavaScript frameworks, I utilized ExpressJS for the backend.
 
