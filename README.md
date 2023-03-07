@@ -14,7 +14,7 @@ I utilized my knowledge of HTML, CSS, and JavaScript to make the app responsive 
 
 As the PWA required user authentication and authorization, I integrated the Auth0 stack to provide robust and secure authentication features. I also implemented Paddle for payment processing. Designed ads, and researched relevant keywords to optimize the PWA's commercial viability.
 
-While working on the project, I encountered some obstacles, such as the need to modularize my code and implement other best practices. However, I approached these hurdles with a tenacious attitude and an unwavering attention to detail. As a result, the PWA, although not perfect, is a testament to my drive to push myself and continually improve.
+While working on the project, I encountered some obstacles, such as the need to modularize my code and implement other best practices. As a result, the PWA, although not perfect, is a testament to my drive to push myself and continually improve.
 
 I came to the conclusion that the project did not have a product market fit and might not be a profitable venture. Nevertheless, I have learned valuable lessons from this experience that I carry with me to this day.
 
